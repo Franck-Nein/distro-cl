@@ -16,6 +16,9 @@ rem
 rem - 7zip available at C:\Program Files\7-Zip\7z.exe (7z920-x64)
 rem       7z920-x64: http://7-zip.org/a/7z920-x64.msi
 rem
+rem - CUDA toolkit installed (tested using CUDA 8.0 cuda_8.0.27.exe)
+rem       assumed installed at C:\Program Files\NVIDIA GPU Computing Toolkit\CUDA\v8.0
+rem
 rem Not used currently, but assumed avaliable (can ignore for now, if preparing a jenkins agent):
 rem - python 3.5 is available at c:\py35-64 (python 3.5.2-amd64) (not used currently)
 rem - cygwin64 available at c:\cygwin64 (not needed currently)
@@ -39,6 +42,8 @@ rem based heavily/entirely on what hiili wrote at https://github.com/torch/torch
 
 rem call "C:\Program Files (x86)\Microsoft Visual Studio 14.0\VC\vcvarsall.bat"
 call "C:\Program Files (x86)\Microsoft Visual Studio 14.0\VC\bin\amd64\vcvars64.bat"
+set "CUDA_PATH=C:\Program Files\NVIDIA GPU Computing Toolkit\CUDA\v8.0"
+
 set "PATH=%PATH%;C:\Program Files\CMake\bin"
 set "PATH=%PATH%;C:\Program Files\Git\bin"
 
@@ -56,6 +61,10 @@ if errorlevel 1 exit /B 1
 
 rmdir /s /q extra\nn
 git submodule update --init extra/nn
+if errorlevel 1 exit /B 1
+
+rmdir /s /q extra\cutorch
+git submodule update --init extra/cutorch
 if errorlevel 1 exit /B 1
 
 rem git submodule update --init --recursive
@@ -154,6 +163,13 @@ rem cmd /c luarocks make "%BASE%\win-files\nn-scm-1.rockspec"
 cmd /c luarocks make "rocks\nn-scm-1.rockspec"
 if errorlevel 1 exit /B 1
 cmd /c luajit -l nn -e "nn.test()"
+if errorlevel 1 exit /B 1
+
+rem cutorch
+cd "%BASE%\extra\cutorch"
+cmd /c luarocks make "%BASE%\win-files\cutorch-scm-1.rockspec"
+if errorlevel 1 exit /B 1
+cmd /c luajit -l cutorch -e "cutorch.test()"
 if errorlevel 1 exit /B 1
 
 goto :eof
