@@ -139,15 +139,19 @@ if errorlevel 1 exit /B 1
 rem lets try nn :-)
 
 rem luaffib first
-rem cd "%BASE%\soft"
-rem git clone https://github.com/hughperkins/luaffifb -b win64
-rem cd luaffifb
+cd "%BASE%\soft"
+git clone https://github.com/hughperkins/luaffifb -b win64
+cd luaffifb
+cmd /c luarocks download luaffi
+if errorlevel 1 exit /B 1
 rem cmd /c luarocks make "%BASE%\win-files\luaffi-scm-1.rockspec"
-rem if errorlevel 1 exit /B 1
+cmd /c luarocks make "luaffi-scm-1.rockspec"
+if errorlevel 1 exit /B 1
 
 rem seems we can install nn without ffi???
 cd "%BASE%\extra\nn"
-cmd /c luarocks make "%BASE%\win-files\nn-scm-1.rockspec"
+rem cmd /c luarocks make "%BASE%\win-files\nn-scm-1.rockspec"
+cmd /c luarocks make "rocks\nn-scm-1.rockspec"
 if errorlevel 1 exit /B 1
 cmd /c luajit -l nn -e "nn.test()"
 if errorlevel 1 exit /B 1
