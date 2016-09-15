@@ -49,8 +49,6 @@ rem (I chose 'customer', and deselected installation of driver, and samples)
 rem (visual studio integration didnt install for me, but doesnt matter, we dont need it)
 rem ping -n 120 127.0.0.1
 
-http://developer.download.nvidia.com/compute/cuda/7.5/Prod/local_installers/cuda_7.5.18_windows.exe
-
 rem install firefox, because it makes downloading visual studio express easier
 powershell.exe -Command (new-object System.Net.WebClient).DownloadFile('https://download.mozilla.org/?product=firefox-48.0.2-SSL"&"os=win"&"lang=en-US', 'firefox-48.0.2.exe')
 firefox-48.0.2 /s
