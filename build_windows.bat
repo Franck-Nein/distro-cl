@@ -100,6 +100,8 @@ echo did luarocks
 copy /y %BASE%\win-files\torch-activate.bat %BASE%\install\bin
 if errorlevel 1 goto :error
 
+call "%BASE%\install\bin\torch-activate.bat"
+
 rem install msys64
 rem compared to the instructions on the website, using bash direclty is synchronous, and puts the output into our
 rem console/jenkins
