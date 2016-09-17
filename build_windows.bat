@@ -170,17 +170,11 @@ cd "%BASE%\pkg\paths"
 cmd /c luarocks make rocks\paths-scm-1.rockspec
 if errorlevel 1 exit /B 1
 
-rem echo "Installing core Torch packages"
-rem cd ${THIS_DIR}/extra/luaffifb && $PREFIX/bin/luarocks make luaffi-scm-1.rockspec       || exit 1
-rem cd ${THIS_DIR}/pkg/sundown   && $PREFIX/bin/luarocks make rocks/sundown-scm-1.rockspec || exit 1
-rem cd ${THIS_DIR}/pkg/cwrap     && $PREFIX/bin/luarocks make rocks/cwrap-scm-1.rockspec   || exit 1
-rem cd ${THIS_DIR}/pkg/paths     && $PREFIX/bin/luarocks make rocks/paths-scm-1.rockspec   || exit 1
-
 rem cd "%BASE%\pkg"
 cd "%BASE%\pkg\torch"
 rem git checkout 7bbe17917ea560facdc652520e5ea01692e460d3
-rem cmd /c luarocks make "%BASE%\win-files\torch-scm-1.rockspec"
-cmd /c luarocks make "rocks\torch-scm-1.rockspec"
+cmd /c luarocks make "%BASE%\win-files\torch-scm-1.rockspec"
+rem cmd /c luarocks make "rocks\torch-scm-1.rockspec"
 if errorlevel 1 exit /B 1
 
 luajit -e "require('torch')"
