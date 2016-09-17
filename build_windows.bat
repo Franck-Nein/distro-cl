@@ -80,6 +80,12 @@ nmake install
 if errorlevel 1 exit /B 1
 rem cmake -DCMAKE_INSTALL_PREFIX=%BASE%/install -G "NMake Makefiles" -P cmake_install.cmake -DCMAKE_BUILD_TYPE=Release
 
+rem this causes everything to build as nmake files, rather than visual studio project files
+rem this is a better fit for us (still builds with visual studio, but using nmake as the builder)
+copy "%BASE%\win-files\cmake.cmd" "%BASE%\install"
+if errorlevel 1 exit goto :error
+echo did copy of cmake
+
 set "LUA_CPATH=%BASE%/install/?.DLL;%BASE%/install/LIB/?.DLL;?.DLL"
 set "LUA_DEV=%BASE%/install"
 set "LUA_PATH=;;%BASE%/install/?;%BASE%/install/?.lua;%BASE%/install/lua/?;%BASE%/install/lua/?.lua;%BASE%/install/lua/?/init.lua
@@ -93,10 +99,6 @@ echo did luarocks
 
 copy /y %BASE%\win-files\torch-activate.bat %BASE%\install\bin
 if errorlevel 1 goto :error
-
-copy "%BASE%\win-files\cmake.cmd" "%BASE%\install"
-if errorlevel 1 exit goto :error
-echo did copy of cmake
 
 rem install msys64
 rem compared to the instructions on the website, using bash direclty is synchronous, and puts the output into our
@@ -173,9 +175,11 @@ if errorlevel 1 exit /B 1
 rem cd "%BASE%\pkg"
 cd "%BASE%\pkg\torch"
 rem git checkout 7bbe17917ea560facdc652520e5ea01692e460d3
-cmd /c luarocks make "%BASE%\win-files\torch-scm-1.rockspec"
-rem cmd /c luarocks make "rocks\torch-scm-1.rockspec"
+rem cmd /c luarocks make "%BASE%\win-files\torch-scm-1.rockspec"
+cmd /c luarocks make "rocks\torch-scm-1.rockspec"
 if errorlevel 1 exit /B 1
+
+
 
 luajit -e "require('torch')"
 if errorlevel 1 exit /B 1
