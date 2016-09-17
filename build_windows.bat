@@ -131,10 +131,56 @@ cd build
 set "SOFT=%BASE%\soft"
 cmd /c %BASE%\soft\msys64\usr\bin\bash.exe --login "%BASE%\win-files\install_lapack.sh"
 
+cd "%BASE%"
+rmdir /s /q "%BASE%\extra\luafilesystem"
+git submodule update --init extra\luafilesystem
+rmdir /s /q "%BASE%\extra\penlight"
+git submodule update --init extra\penlight
+rmdir /s /q "%BASE%\extra\lua-cjson"
+git submodule update --init extra\lua-cjson
+
+rmdir /s /q "%BASE%\pkg\sundown"
+git submodule update --init pkg\sundown
+rmdir /s /q "%BASE%\pkg\cwrap"
+git submodule update --init pkg\cwrap
+rmdir /s /q "%BASE%\pkg\paths"
+git submodule update --init pkg\paths
+
+cd "%BASE%\extra\luafilesystem"
+cmd /c luarocks make rockspecs/luafilesystem-1.6.3-1.rockspec
+if errorlevel 1 exit /B 1
+
+cd "%BASE%\extra\penlight"
+cmd /c luarocks make
+if errorlevel 1 exit /B 1
+
+rem cd "%BASE%\extra\lua-cjson"
+rem cmd /c luarocks make
+rem if errorlevel 1 exit /B 1
+
+cd "%BASE%\pkg\sundown"
+cmd /c luarocks make rocks\sundown-scm-1.rockspec
+if errorlevel 1 exit /B 1
+
+cd "%BASE%\pkg\cwrap"
+cmd /c luarocks make rocks\cwrap-scm-1.rockspec
+if errorlevel 1 exit /B 1
+
+cd "%BASE%\pkg\paths"
+cmd /c luarocks make rocks\paths-scm-1.rockspec
+if errorlevel 1 exit /B 1
+
+rem echo "Installing core Torch packages"
+rem cd ${THIS_DIR}/extra/luaffifb && $PREFIX/bin/luarocks make luaffi-scm-1.rockspec       || exit 1
+rem cd ${THIS_DIR}/pkg/sundown   && $PREFIX/bin/luarocks make rocks/sundown-scm-1.rockspec || exit 1
+rem cd ${THIS_DIR}/pkg/cwrap     && $PREFIX/bin/luarocks make rocks/cwrap-scm-1.rockspec   || exit 1
+rem cd ${THIS_DIR}/pkg/paths     && $PREFIX/bin/luarocks make rocks/paths-scm-1.rockspec   || exit 1
+
 rem cd "%BASE%\pkg"
 cd "%BASE%\pkg\torch"
-git checkout 7bbe17917ea560facdc652520e5ea01692e460d3
-cmd /c luarocks make "%BASE%\win-files\torch-scm-1.rockspec"
+rem git checkout 7bbe17917ea560facdc652520e5ea01692e460d3
+rem cmd /c luarocks make "%BASE%\win-files\torch-scm-1.rockspec"
+cmd /c luarocks make "rocks\torch-scm-1.rockspec"
 if errorlevel 1 exit /B 1
 
 luajit -e "require('torch')"
