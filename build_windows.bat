@@ -39,6 +39,7 @@ rem based heavily/entirely on what hiili wrote at https://github.com/torch/torch
 
 rem call "C:\Program Files (x86)\Microsoft Visual Studio 14.0\VC\vcvarsall.bat"
 call "C:\Program Files (x86)\Microsoft Visual Studio 14.0\VC\bin\amd64\vcvars64.bat"
+
 set "PATH=%PATH%;C:\Program Files\CMake\bin"
 set "PATH=%PATH%;C:\Program Files\Git\bin"
 
@@ -50,6 +51,10 @@ echo BASE: %BASE%
 rem rmdir /s /q "%BASE%\soft"
 mkdir "%BASE%\soft"
 
+rmdir /s /q exe\luajit-rocks
+git submodule update --init exe/luajit-rocks
+if errorlevel 1 exit /B 1
+
 rmdir /s /q pkg\torch
 git submodule update --init pkg/torch
 if errorlevel 1 exit /B 1
@@ -59,6 +64,39 @@ git submodule update --init extra/nn
 if errorlevel 1 exit /B 1
 
 rem git submodule update --init --recursive
+
+echo luajit-rocks
+rem cd /d "%BASE%\soft"
+rem git clone https://github.com/torch/luajit-rocks.git
+rem if errorlevel 1 exit /B 1
+cd exe\luajit-rocks
+mkdir build
+cd build
+cmake .. -DCMAKE_INSTALL_PREFIX=%BASE%/install -DWITH_LUAJIT21=ON -G "NMake Makefiles" -DCMAKE_BUILD_TYPE=Release
+if errorlevel 1 exit /B 1
+nmake
+if errorlevel 1 exit /B 1
+nmake install
+if errorlevel 1 exit /B 1
+rem cmake -DCMAKE_INSTALL_PREFIX=%BASE%/install -G "NMake Makefiles" -P cmake_install.cmake -DCMAKE_BUILD_TYPE=Release
+
+set "LUA_CPATH=%BASE%/install/?.DLL;%BASE%/install/LIB/?.DLL;?.DLL"
+set "LUA_DEV=%BASE%/install"
+set "LUA_PATH=;;%BASE%/install/?;%BASE%/install/?.lua;%BASE%/install/lua/?;%BASE%/install/lua/?.lua;%BASE%/install/lua/?/init.lua
+set "PATH=%PATH%;%BASE%\install;%BASE%\install\bin"
+luajit -e "print('ok')"
+if errorlevel 1 goto :error
+echo did luajit
+cmd /c luarocks
+if errorlevel 1 goto :error
+echo did luarocks
+
+copy /y %BASE%\win-files\torch-activate.bat %BASE%\install\bin
+if errorlevel 1 goto :error
+
+copy "%BASE%\win-files\cmake.cmd" "%BASE%\install"
+if errorlevel 1 exit goto :error
+echo did copy of cmake
 
 rem install msys64
 rem compared to the instructions on the website, using bash direclty is synchronous, and puts the output into our
@@ -93,37 +131,6 @@ cd build
 set "SOFT=%BASE%\soft"
 cmd /c %BASE%\soft\msys64\usr\bin\bash.exe --login "%BASE%\win-files\install_lapack.sh"
 
-echo luajit-rocks
-git clone https://github.com/torch/luajit-rocks.git
-if errorlevel 1 exit /B 1
-cd luajit-rocks
-mkdir build
-cd build
-cmake .. -DCMAKE_INSTALL_PREFIX=%BASE%/install -G "NMake Makefiles" -DCMAKE_BUILD_TYPE=Release
-if errorlevel 1 exit /B 1
-nmake
-if errorlevel 1 exit /B 1
-cmake -DCMAKE_INSTALL_PREFIX=%BASE%/install -G "NMake Makefiles" -P cmake_install.cmake -DCMAKE_BUILD_TYPE=Release
-if errorlevel 1 exit /B 1
-
-set "LUA_CPATH=%BASE%/install/?.DLL;%BASE%/install/LIB/?.DLL;?.DLL"
-set "LUA_DEV=%BASE%/install"
-set "LUA_PATH=;;%BASE%/install/?;%BASE%/install/?.lua;%BASE%/install/lua/?;%BASE%/install/lua/?.lua;%BASE%/install/lua/?/init.lua
-set "PATH=%PATH%;%BASE%\install;%BASE%\install\bin"
-luajit -e "print('ok')"
-if errorlevel 1 goto :error
-echo did luajit
-cmd /c luarocks
-if errorlevel 1 goto :error
-echo did luarocks
-
-copy /y %BASE%\win-files\torch-activate.bat %BASE%\install\bin
-if errorlevel 1 goto :error
-
-copy "%BASE%\win-files\cmake.cmd" "%BASE%\install"
-if errorlevel 1 exit goto :error
-echo did copy of cmake
-
 rem cd "%BASE%\pkg"
 cd "%BASE%\pkg\torch"
 git checkout 7bbe17917ea560facdc652520e5ea01692e460d3
@@ -139,15 +146,18 @@ if errorlevel 1 exit /B 1
 rem lets try nn :-)
 
 rem luaffib first
-rem cd "%BASE%\soft"
-rem git clone https://github.com/hughperkins/luaffifb -b win64
-rem cd luaffifb
+cd "%BASE%\soft"
+git clone https://github.com/hughperkins/luaffifb -b win64
+cd luaffifb
+cmd /c luarocks download luaffi
+if errorlevel 1 exit /B 1
 rem cmd /c luarocks make "%BASE%\win-files\luaffi-scm-1.rockspec"
-rem if errorlevel 1 exit /B 1
+cmd /c luarocks make "luaffi-scm-1.rockspec"
+if errorlevel 1 exit /B 1
 
 rem seems we can install nn without ffi???
 cd "%BASE%\extra\nn"
-cmd /c luarocks make "%BASE%\win-files\nn-scm-1.rockspec"
+cmd /c luarocks make "rocks\nn-scm-1.rockspec"
 if errorlevel 1 exit /B 1
 cmd /c luajit -l nn -e "nn.test()"
 if errorlevel 1 exit /B 1
