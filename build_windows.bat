@@ -141,12 +141,25 @@ git submodule update --init extra\penlight
 rmdir /s /q "%BASE%\extra\lua-cjson"
 git submodule update --init extra\lua-cjson
 
+cd "%BASE%"
 rmdir /s /q "%BASE%\pkg\sundown"
 git submodule update --init pkg\sundown
 rmdir /s /q "%BASE%\pkg\cwrap"
 git submodule update --init pkg\cwrap
 rmdir /s /q "%BASE%\pkg\paths"
 git submodule update --init pkg\paths
+rmdir /s /q "%BASE%\pkg\sys"
+git submodule update --init pkg\sys
+
+rem cd ${THIS_DIR}/pkg/dok       && $PREFIX/bin/luarocks make rocks/dok-scm-1.rockspec     || exit 1
+rem cd ${THIS_DIR}/exe/trepl     && $PREFIX/bin/luarocks make trepl-scm-1.rockspec         || exit 1
+rem cd ${THIS_DIR}/pkg/sys       && $PREFIX/bin/luarocks make sys-1.1-0.rockspec           || exit 1
+rem cd ${THIS_DIR}/pkg/xlua      && $PREFIX/bin/luarocks make xlua-1.0-0.rockspec          || exit 1
+rem cd ${THIS_DIR}/extra/nn      && $PREFIX/bin/luarocks make rocks/nn-scm-1.rockspec      || exit 1
+rem cd ${THIS_DIR}/extra/graph   && $PREFIX/bin/luarocks make rocks/graph-scm-1.rockspec   || exit 1
+rem cd ${THIS_DIR}/extra/nngraph && $PREFIX/bin/luarocks make nngraph-scm-1.rockspec       || exit 1
+rem cd ${THIS_DIR}/pkg/image     && $PREFIX/bin/luarocks make image-1.1.alpha-0.rockspec   || exit 1
+rem cd ${THIS_DIR}/pkg/optim     && $PREFIX/bin/luarocks make optim-1.0.5-0.rockspec       || exit 1
 
 cd "%BASE%\extra\luafilesystem"
 cmd /c luarocks make rockspecs/luafilesystem-1.6.3-1.rockspec
@@ -179,6 +192,9 @@ rem cmd /c luarocks make "%BASE%\win-files\torch-scm-1.rockspec"
 cmd /c luarocks make "rocks\torch-scm-1.rockspec"
 if errorlevel 1 exit /B 1
 
+cd "%BASE%\pkg\sys"
+cmd /c luarocks make sys-1.1-0.rockspec
+if errorlevel 1 exit /B 1
 
 
 luajit -e "require('torch')"
