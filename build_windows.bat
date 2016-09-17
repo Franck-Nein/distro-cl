@@ -188,8 +188,8 @@ if errorlevel 1 exit /B 1
 rem cd "%BASE%\pkg"
 cd "%BASE%\pkg\torch"
 rem git checkout 7bbe17917ea560facdc652520e5ea01692e460d3
-rem cmd /c luarocks make "%BASE%\win-files\torch-scm-1.rockspec"
-cmd /c luarocks make "rocks\torch-scm-1.rockspec"
+cmd /c luarocks make "%BASE%\win-files\torch-scm-1.rockspec"
+rem cmd /c luarocks make "rocks\torch-scm-1.rockspec"
 if errorlevel 1 exit /B 1
 
 cd "%BASE%\pkg\sys"
