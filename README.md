@@ -90,6 +90,11 @@ luajit -l cunn -e 'nn.testcuda()'
 
 # FAQ
 
+## Support?
+
+Please note that currently, right now, I'm focused 100.000% on [cuda-on-cl](https://github.com/hughperkins/cuda-on-cl), so please be patient during this period
+- I anticipate that I shall use cuda-on-cl to re-port the very latest cutting edge version of Torch in the nearish future (q1/q2 2017)
+
 ## How does this relate to mainline torch?
 
 It's a stabilized version of torch mainline.  Torch mainline is kind of in permanent 'sid'-style
@@ -159,4 +164,3 @@ An hcc implementation for Torch is in progress here:
       * migrated from clBLAS 2.4 to clBLAS 2.11/develop. This migration is not set in stone, depends on how well that works. However, there is a bug in 2.4 for certain configurations of matrix multiplication, and its not obvious how to fix that, so maybe using 2.11/develop is the easiest way forward?
 * 30th April:
   * distro-cl first created, to stabilize Torch distribution
-
