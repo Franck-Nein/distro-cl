@@ -92,8 +92,11 @@ luajit -l cunn -e 'nn.testcuda()'
 
 ## Support?
 
-Please note that currently, right now, I'm focused 100.000% on [cuda-on-cl](https://github.com/hughperkins/cuda-on-cl), so please be patient during this period
-- I anticipate that I shall use cuda-on-cl to re-port the very latest cutting edge version of Torch in the nearish future (q1/q2 2017)
+~~Please note that currently, right now, I'm focused 100.000% on [cuda-on-cl](https://github.com/hughperkins/cuda-on-cl), so please be patient during this period~~
+- ~~I anticipate that I shall use cuda-on-cl to re-port the very latest cutting edge version of Torch in the nearish future (q1/q2 2017)~~
+
+I'm taking a break from OpenCL, since NIPS, trying some new things :-)  Unfortunately, supporting my OpenCL projects was taking ~20-40 hours a week, and I do have a full-time day-job too,
+so cannot provide support at this time.  Please help each other out during this period :-)  Feel free to create your own fork etc.  Just do whatever you can do to help encourage a diverse vendor ecosystem please :-)
 
 ## How does this relate to mainline torch?
 
