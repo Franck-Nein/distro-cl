@@ -237,7 +237,7 @@ elif [[ "$(uname)" == 'Linux' ]]; then
                                 qt-devel qtwebkit-devel sox-plugins-freeworld \
                                 ipython
             install_openblas || true
-        elif [[ $fedora_major_version == '22' ||  $fedora_major_version == '23'  ]]; then
+        elif [[ $fedora_major_version == '22' ||  $fedora_major_version == '23' || $fedora_major_version == '24' || $fedora_major_version == '25'  ]]; then
             #using dnf - since yum has been deprecated
             #sox-plugins-freeworld is not yet available in repos for F22
             sudo dnf install -y cmake curl readline-devel ncurses-devel \
@@ -248,7 +248,7 @@ elif [[ "$(uname)" == 'Linux' ]]; then
             			python-ipython czmq czmq-devel
             install_openblas || true
         else
-            echo "Only Fedora 20 or Fedora 22 is supported for now, aborting."
+            echo "Only Fedora 20 or Fedora 22-25 are supported for now, aborting."
             exit 1
         fi
     elif [[ $distribution == 'centos' ]]; then
