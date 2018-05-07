@@ -157,7 +157,7 @@ elif [[ "$(uname)" == 'Linux' ]]; then
         sudo apt-get install -y build-essential gcc g++ curl \
             cmake libreadline-dev git-core libqt4-dev libjpeg-dev \
             libpng-dev ncurses-dev imagemagick libzmq3-dev gfortran \
-            unzip gnuplot gnuplot-x11 ipython libprotobuf-dev protobuf-compiler libpng12-dev
+            unzip gnuplot gnuplot-x11 ipython libprotobuf-dev protobuf-compiler
 
         gcc_major_version=$(gcc --version | grep ^gcc | awk '{print $4}' | \
                             cut -c 1)
