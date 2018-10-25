@@ -237,7 +237,7 @@ elif [[ "$(uname)" == 'Linux' ]]; then
                                 qt-devel qtwebkit-devel sox-plugins-freeworld \
                                 ipython
             install_openblas || true
-        elif [[ $fedora_major_version == '22' ||  $fedora_major_version == '23' || $fedora_major_version == '24' || $fedora_major_version == '25' || $fedora_major_version == '26'  ]]; then
+        elif [[ $fedora_major_version == '22' ||  $fedora_major_version == '23' || $fedora_major_version == '24' || $fedora_major_version == '25' || $fedora_major_version == '26' ||  $fedora_major_version == '28' ]]; then
             #using dnf - since yum has been deprecated
             #sox-plugins-freeworld is not yet available in repos for F22
             sudo dnf install -y cmake curl readline-devel ncurses-devel \
@@ -248,7 +248,7 @@ elif [[ "$(uname)" == 'Linux' ]]; then
             			python-ipython czmq czmq-devel
             install_openblas || true
         else
-            echo "Only Fedora 20 or Fedora 22-26 are supported for now, aborting."
+            echo "Only Fedora 20 or Fedora 22-26,28 are supported for now, aborting."
             exit 1
         fi
     elif [[ $distribution == 'centos' ]]; then
@@ -286,7 +286,7 @@ fi
 ipython_exists=$(command -v ipython)
 if [[ $ipython_exists ]]; then {
     ipython_version=$(ipython --version|cut -f1 -d'.')
-    if [[ $ipython_version != 2 && $ipython_version != 3 && $ipython_version != 4 ]]; then {
+    if [[ $ipython_version != 2 && $ipython_version != 3 && $ipython_version != 4 && $ipython_version != 5 ]]; then {
         echo 'WARNING: Your ipython version is too old.  Type "ipython --version" to see this.  Should be at least version 2'
     } fi
 } fi
